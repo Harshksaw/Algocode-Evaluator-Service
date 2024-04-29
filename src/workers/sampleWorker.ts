@@ -1,10 +1,11 @@
-import { Worker } from "bullmq";
-import { WorkerResponse } from "../types/bullMqWorkerResponse";
+import { Job, Worker } from "bullmq";
+
 import { SampleJob } from "../jobs/SampleJob";
+import redisConnection from "../config/redisConfig";
 
 export default function SampleWorker(queueName : string){
 
-    const worker = new Worker(queueName,
+    new Worker(queueName,
          async (job :  Job) =>{
             if(job.name === "SampleJob"){
                 {
@@ -15,7 +16,10 @@ export default function SampleWorker(queueName : string){
                     return true;
 
                 }
-         }}
+         }},
+         {
+            connection : redisConnection,
+         }
         )
 
 }

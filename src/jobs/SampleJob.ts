@@ -17,8 +17,8 @@ export class SampleJob implements IJob{
         }
         console.log(`Job ${this.name} is running with payload ${this.payload}`);
     }
-    failed = (job : Job) : void =>{
-        console.log(`Job ${this.name} failed with payload ${this.payload}`);
+    failed = (job? : Job) : void =>{
+        console.log(`Job ${this.name}  ${job}failed with payload ${this.payload}`);
 
     }
 }

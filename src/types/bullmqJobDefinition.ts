@@ -1,4 +1,4 @@
-import {Job} from 'bullmg'
+import {Job} from 'bullmq'
 
 export interface IJob{
     name: string,

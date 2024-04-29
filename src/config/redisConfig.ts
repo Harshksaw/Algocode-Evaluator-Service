@@ -5,6 +5,7 @@ import serverconfig from './serverConfig';
 const redisConfig = {
     port: serverconfig.REDIS_PORT,
     host: serverconfig.REDIS_HOST,
+    maxRetriesPerRequest: null,
 
 }
 

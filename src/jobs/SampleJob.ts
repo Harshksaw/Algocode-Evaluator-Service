@@ -1,7 +1,7 @@
 import { Job } from "bullmq";
 import { IJob } from "../types/bullmqJobDefinition";
 
-class SampleJob implements IJob{
+export class SampleJob implements IJob{
     name: string;
     payload?: Record<string, unknown> | undefined;
     constructor(payload: Record<string, unknown> ){
@@ -11,7 +11,10 @@ class SampleJob implements IJob{
 
     }
 
-    handle = () =>{
+    handle = (job? : Job) =>{
+        if(job){
+            console.log(`Job ${this.name} is running with payload ${this.payload} and job id ${job.id}}`);
+        }
         console.log(`Job ${this.name} is running with payload ${this.payload}`);
     }
     failed = (job : Job) : void =>{

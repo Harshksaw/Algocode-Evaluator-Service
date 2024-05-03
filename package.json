@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prebuild": "npx eslint  --fix",
     "build": "npx tsc",
-    "watch": "tsc -b",
+    "watch": "npx tsc -w",
     "prestart": "npm run build",
     "start": "npx nodemon dist/index.js",
-    "dev": "npx concurrently --kill-others  \"npm run watch\"  \"npm run start\""
+    "dev": "npx concurrently --kill-others \"npm run watch\" \"npm start\" "
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@bull-board/express": "^5.17.0",
     "@types/ioredis": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",

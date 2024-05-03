@@ -1,5 +1,4 @@
 export interface WorkerResponse {
-    status: number;
-    message: string;
-
+    status: number,
+    message: string
 }

@@ -1,6 +1,6 @@
 import { CreateSubmissionDto } from "../dtos/CreateSubmmissionDto";
 
-Import {Request, Response} from 'express';  
+import {Request, Response} from 'express';  
 
 
 export function addSubmission(req: Request, res: Response) {

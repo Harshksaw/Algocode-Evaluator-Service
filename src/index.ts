@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-
+import bodyParser from "body-parser";
 import serverConfig from "./config/serverConfig";
 import sampleQueueProducer from "./producers/sampleQueueProducer";
 import apiRouter from "./routes";
@@ -8,6 +8,11 @@ import bullBoardAdapter from "./config/bullBoardConfig";
 
 
 const app: Express = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.text());
+
 
 app.use('/api', apiRouter);
 app.use('/ui', bullBoardAdapter.getRouter());

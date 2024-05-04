@@ -17,9 +17,9 @@ app.listen(serverConfig_1.default.PORT, () => {
     console.log(`BullBoard dashboard running on: http://localhost:${serverConfig_1.default.PORT}/ui`);
     (0, SampleWorker_1.default)('SampleQueue');
     (0, sampleQueueProducer_1.default)('SampleJob', {
-        name: "Sanket",
-        company: "Microsoft",
-        position: "SDE 2 L61",
-        locatiion: "Remote | BLR | Noida"
+        name: "Harsh",
+        company: "student",
+        position: "SL61",
+        locatiion: "Rema"
     });
 });

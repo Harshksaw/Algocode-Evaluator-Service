@@ -5,6 +5,7 @@ import sampleQueueProducer from "./producers/sampleQueueProducer";
 import apiRouter from "./routes";
 import SampleWorker from "./workers/SampleWorker";
 import bullBoardAdapter from "./config/bullBoardConfig";
+import runPython from "./containers/runPythonDocker";
 
 
 const app: Express = express();
@@ -19,14 +20,16 @@ app.use('/ui', bullBoardAdapter.getRouter());
 
 app.listen(serverConfig.PORT, () => {
   console.log(`Server started at *:${serverConfig.PORT}`);
-  console.log(`BullBoard dashboard running on: http://localhost:${serverConfig.PORT}/ui`);
+  // console.log(`BullBoard dashboard running on: http://localhost:${serverConfig.PORT}/ui`);
   
-  SampleWorker('SampleQueue');
+  // SampleWorker('SampleQueue');
 
-  sampleQueueProducer('SampleJob', {
-    name: "Harsh",
-    company: "student",
-    position: "SL61",
-    locatiion: "Rema"
-  });
+  runPython('print("Hello World")');
+
+  // sampleQueueProducer('SampleJob', {
+  //   name: "Harsh",
+  //   company: "student",
+  //   position: "SL61",
+  //   locatiion: "Rema"
+  // });
 });

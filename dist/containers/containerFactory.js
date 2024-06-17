@@ -19,11 +19,11 @@ function createContainer(imageName, cmdExecutable) {
         const container = yield docker.createContainer({
             Image: imageName,
             Cmd: cmdExecutable,
-            AttachStdin: true, //standard input stream
-            AttachStdout: true, //standard output stream
-            AttachStderr: true, //standard error stream
-            Tty: true, //allocate a pseudo-tty 
-            OpenStdin: true, //open standard input kkep the input stream open even no interaction is there
+            AttachStdin: true, // to enable input streams
+            AttachStdout: true, // to enable output streams
+            AttachStderr: true, // to enable error streams
+            Tty: false,
+            OpenStdin: true // keep the input stream open even no interaction is there
         });
         return container;
     });

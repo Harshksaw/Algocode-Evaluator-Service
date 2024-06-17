@@ -19,15 +19,20 @@ function runPython(code) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Running Python Code');
         // Ensure createContainer accepts an array of strings as the second argument
-        const pythonDockerContainer = yield (0, containerFactory_1.default)(constants_1.PYTHON_IMAGE.PYTHON_VERSION, ['python3', '-c', code, 'stty -echo']);
+        const pythonDockerContainer = yield (0, containerFactory_1.default)(constants_1.PYTHON_IMAGE, [
+            '-c',
+            code,
+            'stty -echo'
+        ]);
         // Ensure createContainer returns a Promise that resolves to a Container
         yield pythonDockerContainer.start();
-        const loggerStream = yield pythonDockerContainer.logs({
-            stdout: true,
-            stderr: true,
-            timeStamps: false,
-            follow: true
-        });
+        // const loggerStream = await pythonDockerContainer.logs({
+        //     stdout: true,
+        //     stderr: true,
+        //     timeStamps: false,
+        //     follow: true
+        // }
+        // )
         return pythonDockerContainer;
     });
 }

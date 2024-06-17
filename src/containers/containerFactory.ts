@@ -1,24 +1,19 @@
-import Dockerode from "dockerode";
+import Docker from 'dockerode';
 
+async function createContainer(imageName: string, cmdExecutable: string[]) {
+    const docker = new Docker();
 
-async function createContainer(imageName : string, cmdExecutable : string){
+    const container = await docker.createContainer({
+        Image: imageName,
+        Cmd: cmdExecutable,
+        AttachStdin: true, // to enable input streams
+        AttachStdout: true, // to enable output streams
+        AttachStderr: true, // to enable error streams
+        Tty: false,
+        OpenStdin: true // keep the input stream open even no interaction is there
+    });
 
-
-  const docker = new Dockerode()
-  const container = await docker.createContainer({ 
-    Image: imageName,
-    Cmd : cmdExecutable,
-     AttachStdin: true, //standard input stream
-    AttachStdout: true, //standard output stream
-     AttachStderr: true, //standard error stream
-     Tty: true, //allocate a pseudo-tty 
-     OpenStdin: true, //open standard input kkep the input stream open even no interaction is there
-
-     })
-
-     return container;
-
-
-
+    return container;
 }
+
 export default createContainer;

@@ -21,7 +21,10 @@ app.listen(serverConfig_1.default.PORT, () => {
     console.log(`Server started at *:${serverConfig_1.default.PORT}`);
     // console.log(`BullBoard dashboard running on: http://localhost:${serverConfig.PORT}/ui`);
     // SampleWorker('SampleQueue');
-    const code = `print("Hello World")`;
+    const code = `
+  x = input()
+  print("value fo x is",x)
+  `;
     (0, runPythonDocker_1.default)(code);
     // sampleQueueProducer('SampleJob', {
     //   name: "Harsh",

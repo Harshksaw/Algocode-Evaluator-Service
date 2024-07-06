@@ -18,23 +18,23 @@ const constants_1 = require("../utils/constants");
 const containerFactory_1 = __importDefault(require("./containerFactory"));
 const dockerHelper_1 = __importDefault(require("./dockerHelper"));
 // import pullImage from './pullImage';
-function runPython(code, inputTestCase) {
+function runJava(code, inputTestCase) {
     return __awaiter(this, void 0, void 0, function* () {
         const rawLogBuffer = [];
-        // await pullImage(PYTHON_IMAGE);
-        console.log("Initialising a new python docker container");
-        const runCommand = `echo '${code.replace(/'/g, `'\\"`)}' > test.py && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | python3 test.py`;
+        // await pullImage(java_IMAGE);
+        console.log("Initialising a new java docker container");
+        const runCommand = `echo '${code.replace(/'/g, `'\\"`)}' > Main.java && javac Main.java &&   echo '${inputTestCase.replace(/'/g, `'\\"`)}' | java Main`;
         console.log(runCommand);
-        // const pythonDockerContainer = await createContainer(PYTHON_IMAGE, ['python3', '-c', code, 'stty -echo']); 
-        const pythonDockerContainer = yield (0, containerFactory_1.default)(constants_1.PYTHON_IMAGE, [
+        // const javaDockerContainer = await createContainer(java_IMAGE, ['java3', '-c', code, 'stty -echo']); 
+        const javaDockerContainer = yield (0, containerFactory_1.default)(constants_1.JAVA_IMAGE, [
             '/bin/sh',
             '-c',
             runCommand
         ]);
         // starting / booting the corresponding docker container
-        yield pythonDockerContainer.start();
+        yield javaDockerContainer.start();
         console.log("Started the docker container");
-        const loggerStream = yield pythonDockerContainer.logs({
+        const loggerStream = yield javaDockerContainer.logs({
             stdout: true,
             stderr: true,
             timestamps: false,
@@ -54,7 +54,7 @@ function runPython(code, inputTestCase) {
             });
         });
         // remove the container when done with it
-        yield pythonDockerContainer.remove();
+        yield javaDockerContainer.remove();
     });
 }
-exports.default = runPython;
+exports.default = runJava;

@@ -4,14 +4,14 @@
 import { PYTHON_IMAGE } from '../utils/constants';
 import createContainer from './containerFactory';
 import decodeDockerStream from './dockerHelper';
-// import pullImage from './pullImage';
+import pullImage from './pullImage';
 
 
 async function runPython(code: string, inputTestCase: string) {
 
     const rawLogBuffer: Buffer[] = [];
 
-    // await pullImage(PYTHON_IMAGE);
+    await pullImage(PYTHON_IMAGE);
 
 
     console.log("Initialising a new python docker container");
@@ -44,7 +44,7 @@ async function runPython(code: string, inputTestCase: string) {
 
     await new Promise((res) => {
         loggerStream.on('end', () => {
-
+            console.log(rawLogBuffer);
             const completeBuffer = Buffer.concat(rawLogBuffer);
             const decodedStream = decodeDockerStream(completeBuffer);
             console.log(decodedStream);

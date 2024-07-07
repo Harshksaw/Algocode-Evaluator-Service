@@ -18,23 +18,22 @@ const constants_1 = require("../utils/constants");
 const containerFactory_1 = __importDefault(require("./containerFactory"));
 const dockerHelper_1 = __importDefault(require("./dockerHelper"));
 const pullImage_1 = __importDefault(require("./pullImage"));
-function runPython(code, inputTestCase) {
+function runCpp(code, inputTestCase) {
     return __awaiter(this, void 0, void 0, function* () {
         const rawLogBuffer = [];
-        yield (0, pullImage_1.default)(constants_1.PYTHON_IMAGE);
-        console.log("Initialising a new python docker container");
-        const runCommand = `echo '${code.replace(/'/g, `'\\"`)}' > test.py && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | python3 test.py`;
+        console.log("Initialising a new cpp docker container");
+        yield (0, pullImage_1.default)(constants_1.CPP_IMAGE);
+        const runCommand = `echo '${code.replace(/'/g, `'\\"`)}' > main.cpp && g++ main.cpp -o main && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | ./main`;
         console.log(runCommand);
-        // const pythonDockerContainer = await createContainer(PYTHON_IMAGE, ['python3', '-c', code, 'stty -echo']); 
-        const pythonDockerContainer = yield (0, containerFactory_1.default)(constants_1.PYTHON_IMAGE, [
+        const cppDockerContainer = yield (0, containerFactory_1.default)(constants_1.CPP_IMAGE, [
             '/bin/sh',
             '-c',
             runCommand
         ]);
         // starting / booting the corresponding docker container
-        yield pythonDockerContainer.start();
+        yield cppDockerContainer.start();
         console.log("Started the docker container");
-        const loggerStream = yield pythonDockerContainer.logs({
+        const loggerStream = yield cppDockerContainer.logs({
             stdout: true,
             stderr: true,
             timestamps: false,
@@ -44,18 +43,19 @@ function runPython(code, inputTestCase) {
         loggerStream.on('data', (chunk) => {
             rawLogBuffer.push(chunk);
         });
-        yield new Promise((res) => {
+        const response = yield new Promise((res) => {
             loggerStream.on('end', () => {
                 console.log(rawLogBuffer);
                 const completeBuffer = Buffer.concat(rawLogBuffer);
                 const decodedStream = (0, dockerHelper_1.default)(completeBuffer);
                 console.log(decodedStream);
                 console.log(decodedStream.stdout);
-                res(dockerHelper_1.default);
+                res(decodedStream);
             });
         });
         // remove the container when done with it
-        yield pythonDockerContainer.remove();
+        yield cppDockerContainer.remove();
+        return response;
     });
 }
-exports.default = runPython;
+exports.default = runCpp;

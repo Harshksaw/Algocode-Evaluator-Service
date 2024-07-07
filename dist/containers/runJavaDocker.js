@@ -17,15 +17,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const constants_1 = require("../utils/constants");
 const containerFactory_1 = __importDefault(require("./containerFactory"));
 const dockerHelper_1 = __importDefault(require("./dockerHelper"));
-// import pullImage from './pullImage';
+const pullImage_1 = __importDefault(require("./pullImage"));
 function runJava(code, inputTestCase) {
     return __awaiter(this, void 0, void 0, function* () {
         const rawLogBuffer = [];
-        // await pullImage(java_IMAGE);
+        yield (0, pullImage_1.default)(constants_1.JAVA_IMAGE);
         console.log("Initialising a new java docker container");
-        const runCommand = `echo '${code.replace(/'/g, `'\\"`)}' > Main.java && javac Main.java &&   echo '${inputTestCase.replace(/'/g, `'\\"`)}' | java Main`;
+        const runCommand = `echo '${code.replace(/'/g, `'\\"`)}' > Main.java && javac Main.java && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | java Main`;
         console.log(runCommand);
-        // const javaDockerContainer = await createContainer(java_IMAGE, ['java3', '-c', code, 'stty -echo']); 
         const javaDockerContainer = yield (0, containerFactory_1.default)(constants_1.JAVA_IMAGE, [
             '/bin/sh',
             '-c',
@@ -46,6 +45,7 @@ function runJava(code, inputTestCase) {
         });
         yield new Promise((res) => {
             loggerStream.on('end', () => {
+                console.log(rawLogBuffer);
                 const completeBuffer = Buffer.concat(rawLogBuffer);
                 const decodedStream = (0, dockerHelper_1.default)(completeBuffer);
                 console.log(decodedStream);

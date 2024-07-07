@@ -12,11 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const sampleQueue_1 = __importDefault(require("../queues/sampleQueue"));
-function default_1(name, payload, priority) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield sampleQueue_1.default.add(name, payload, { priority });
-        console.log("Successfully added a new job");
+const bullmq_1 = require("bullmq");
+const redisConfig_1 = __importDefault(require("../config/redisConfig"));
+const SubmissionJob_1 = __importDefault(require("../jobs/SubmissionJob"));
+function SubmissionWorker(queueName) {
+    new bullmq_1.Worker(queueName, (job) => __awaiter(this, void 0, void 0, function* () {
+        console.log("SubmissionJob job worker kicking", job);
+        if (job.name === "SubmissionJob") {
+            const submissionJobInstance = new SubmissionJob_1.default(job.data);
+            submissionJobInstance.handle(job);
+            return true;
+        }
+    }), {
+        connection: redisConfig_1.default
     });
 }
-exports.default = default_1;
+exports.default = SubmissionWorker;

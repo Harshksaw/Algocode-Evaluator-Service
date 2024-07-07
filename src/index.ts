@@ -1,73 +1,73 @@
-import express, { Express } from "express";
 import bodyParser from "body-parser";
+import express, { Express } from "express";
+
+import bullBoardAdapter from "./config/bullBoardConfig";
 import serverConfig from "./config/serverConfig";
-// import sampleQueueProducer from "./producers/sampleQueueProducer";
+import submissionQueueProducer from "./producers/submissionQueueProducer";
 import apiRouter from "./routes";
-// import SampleWorker from "./workers/SampleWorker";
-// import bullBoardAdapter from "./config/bullBoardConfig";
-// import runPython from "./containers/runPythonDocker";
-// import runJava from "./containers/runJavaDocker";
-import runCpp from "./containers/runCppdocker";
+import { submission_queue } from "./utils/constants";
+import SampleWorker from "./workers/SampleWorker";
+import SubmissionWorker from "./workers/SubmissionWorker";
 
 const app: Express = express();
 
+app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
 
-app.use("/api", apiRouter);
-// app.use('/ui', bullBoardAdapter.getRouter());
+app.use('/api', apiRouter);
+app.use('/ui', bullBoardAdapter.getRouter());
 
 app.listen(serverConfig.PORT, () => {
   console.log(`Server started at *:${serverConfig.PORT}`);
-  // console.log(`BullBoard dashboard running on: http://localhost:${serverConfig.PORT}/ui`);
+  console.log(`BullBoard dashboard running on: http://localhost:${serverConfig.PORT}/ui`);
+  
+  SampleWorker('SampleQueue');
+  SubmissionWorker(submission_queue);
 
-  // SampleWorker('SampleQueue');
-  // const code = `
-  // x = input()
-  // print("value fo x is",x)
-  // `;
-  //   const JavaCode = `
-  //   import java.util.*;
-  // public class Main {
-  //     public static void main(String[] args) {
-  //         Scanner scanner = new Scanner(System.in);
-  //         System.out.println("input a number");
-  //         String input = scanner.nextLine();
-  //         System.out.println("value of input is " + input);
-  //         for(int i = 0; i < input; i++) {
-  //             System.out.println(i);
-  //             };
-  //     }
-  // }
-  //   `;
+  
+  const userCode = `
+  
+    class Solution {
+      public:
+      vector<int> permute() {
+          vector<int> v;
+          v.push_back(10);
+          return v;
+      }
+    };
+  `;
 
-  const cppCode = `
-  #include <iostream>
-  #include <stdio.h>
+  const code = `
+  #include<iostream>
+  #include<vector>
+  #include<stdio.h>
   using namespace std;
+  
+  ${userCode}
 
   int main() {
-    int x;
-    cin>>x;
-    cout<<"value of x is "<<x<<" ";
-    for(int i = 0; i < x; i++) {  
-      cout<<i<< " ";
-      }
 
-  fflush(stdout)
-    return 0;  
-      }`;
+    Solution s;
+    vector<int> result = s.permute();
+    for(int x : result) {
+      cout<<x<<" ";
+    }
+    cout<<endl;
+    return 0;
+  }
+  `;
 
-  const inputTestCase = `10`;
+const inputCase = `10
+`;
 
-  // runPython(code, "harsh");
-  runCpp(cppCode, inputTestCase);
+submissionQueueProducer({"1234": {
+  language: "CPP",
+  inputCase,
+  code
+}});
 
-  // sampleQueueProducer('SampleJob', {
-  //   name: "Harsh",
-  //   company: "student",
-  //   position: "SL61",
-  //   locatiion: "Rema"
-  // });
+  
+//   runCpp(code, inputCase);
+
 });

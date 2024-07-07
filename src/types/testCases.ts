@@ -1,8 +1,5 @@
 export type TestCase = {
     input: string,
     output: string
-}
-
-export interface TestCases {
-    testCases: TestCase[]
-}
+};
+export type TestCases = TestCase[];

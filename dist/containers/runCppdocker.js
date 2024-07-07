@@ -23,7 +23,7 @@ function runCpp(code, inputTestCase) {
         const rawLogBuffer = [];
         // await pullImage(Cpp_IMAGE);
         console.log("Initialising a new Cpp docker container");
-        const runCommand = `echo '${code.replace(/'/g, `'\\'`)}' > main.cpp && g++ main.cpp -o && echo '${inputTestCase.replace(/' /g, `'\\"`)}' |  ./main`;
+        const runCommand = `echo '${code.replace(/'/g, "\\'")}' > main.cpp && g++ main.cpp -o main && echo '${inputTestCase}' | ./main`;
         console.log(runCommand);
         const CppDockerContainer = yield (0, containerFactory_1.default)(constants_1.CPP_IMAGE, [
             '/bin/sh',

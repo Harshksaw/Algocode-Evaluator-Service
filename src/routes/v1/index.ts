@@ -1,8 +1,7 @@
 import express from "express";
 
 import { pingCheck } from "../../controllers/pingController";
-import submissionRouter from "./submissionRouter";
-
+import submissionRouter from "./submissionRoutes";
 
 const v1Router = express.Router();
 

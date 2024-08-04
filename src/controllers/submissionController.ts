@@ -1,20 +1,17 @@
-import { CreateSubmissionDto } from "../dtos/CreateSubmmissionDto";
+import { Request, Response } from 'express';
 
-import {Request, Response} from 'express';  
+import { CreateSubmissionDto } from '../dtos/CreateSubmissionDto';
 
 
 export function addSubmission(req: Request, res: Response) {
     const submissionDto = req.body as CreateSubmissionDto;
-
-
-    //TODO add Validation using zod
+    console.log(submissionDto);
+    // TODO: Add validation using zod
 
     return res.status(201).json({
         success: true,
         error: {},
-        message: 'Submission added successfully',
+        message: 'Successfully collected the submission',
         data: submissionDto
-    })
-
-
+    });
 }

@@ -12,11 +12,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const sampleQueue_1 = __importDefault(require("../queues/sampleQueue"));
-function default_1(name, payload, priority) {
+const dockerode_1 = __importDefault(require("dockerode"));
+function pullImage(imageName) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield sampleQueue_1.default.add(name, payload, { priority });
-        console.log("Successfully added a new job");
+        try {
+            const docker = new dockerode_1.default();
+            return new Promise((res, rej) => {
+                docker.pull(imageName, (err, stream) => {
+                    if (err)
+                        throw err;
+                    docker.modem.followProgress(stream, (err, response) => err ? rej(err) : res(response), (event) => {
+                        console.log(event.status);
+                    });
+                });
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
     });
 }
-exports.default = default_1;
+exports.default = pullImage;

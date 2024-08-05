@@ -52,30 +52,13 @@ class PythonExecutor implements CodeExecutorStrategy{
             
         } catch (error) {
 
-            return {output : error, status: "ERROR"};
+            return {output : error as string, status: "ERROR"};
 
         }finally{
             await pythonDockerContainer.remove();
         }
 
-        // const codeResponse : DockerStreamOutput = await new Promise((res) => {
-        //     loggerStream.on('end', () => {
-        //         console.log(rawLogBuffer);
-        //         const completeBuffer = Buffer.concat(rawLogBuffer);
-        //         const decodedStream = decodeDockerStream(completeBuffer);
-        //         console.log(decodedStream);
-        //         console.log(decodedStream.stdout);
-        //         if(decodedStream.stderr){
-        //             res(decodedStream.stderr);
-        //         }else{
-        //             rej(decodedStream.stdout);
-        //         }
-
-        //     });
-        // });
-        
-        // remove the container when done with it
-   
+      
 
 
     

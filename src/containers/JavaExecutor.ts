@@ -6,10 +6,15 @@ import createContainer from './containerFactory';
 import decodeDockerStream from './dockerHelper';
 import pullImage from './pullImage';
 
+class JavaExecutor implements CodeExecutorStrategy{
 
-async function runJava(code: string, inputTestCase: string) {
+   async  excute(code: string, inputTestCases: string): Promise<excutionResponse> {
 
-    const rawLogBuffer: Buffer[] = [];
+        const rawLogBuffer: Buffer[] = [];
+
+
+
+
 
     await pullImage(JAVA_IMAGE);
 
@@ -50,10 +55,44 @@ async function runJava(code: string, inputTestCase: string) {
             res(decodeDockerStream);
         });
     });
-    
+    try {
+        const codeResponse : string = await this.fetchDecodedStream(loggerStream, rawLogBuffer);
+        return {output : codeResponse, status: "COMPLETED"};
+        
+    } catch (error) {
+
+        return {output : error as string, status: "ERROR"};
+
+    }finally{
+        await javaDockerContainer.remove();
+    }
+
+}
+
+    fetchDecodedStream(loggerStream : ReadableStream, rawLogBuffer: Buffer){
+
+        //TODO move this to a helper function
+        
+        return new Promise((res) => {
+            loggerStream.on('end', () => {
+                console.log(rawLogBuffer);
+                const completeBuffer = Buffer.concat(rawLogBuffer);
+                const decodedStream = decodeDockerStream(completeBuffer);
+                console.log(decodedStream);
+                console.log(decodedStream.stdout);
+                if(decodedStream.stderr){
+                    res(decodedStream.stderr);
+                }else{
+                    rej(decodedStream.stdout);
+                }
+
+            });
+        })
+
+    }
     // remove the container when done with it
-    await javaDockerContainer.remove();
+    
 
-}       
-
-export default runJava;
+     
+    }
+export default JavaExecutor;

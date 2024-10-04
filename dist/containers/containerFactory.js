@@ -12,11 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const sampleQueue_1 = __importDefault(require("../queues/sampleQueue"));
-function default_1(name, payload, priority) {
+const dockerode_1 = __importDefault(require("dockerode"));
+function createContainer(imageName, cmdExecutable) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield sampleQueue_1.default.add(name, payload, { priority });
-        console.log("Successfully added a new job");
+        const docker = new dockerode_1.default();
+        const container = yield docker.createContainer({
+            Image: imageName,
+            Cmd: cmdExecutable,
+            AttachStdin: true, // to enable input streams
+            AttachStdout: true, // to enable output streams
+            AttachStderr: true, // to enable error streams
+            Tty: false,
+            OpenStdin: true // keep the input stream open even no interaction is there
+        });
+        return container;
     });
 }
-exports.default = default_1;
+exports.default = createContainer;
